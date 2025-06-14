@@ -21,6 +21,12 @@ int main(int argc, char *argv[]) {
     return SDL_APP_FAILURE;
   }
 
+  // player initalization
+  Player player;
+  player_init(&player);
+
+  Uint64 last_time = SDL_GetTicks();
+
   // main event loop, might be usurped into game.c in the future
   bool running = true;
   SDL_Event event;
@@ -31,19 +37,24 @@ int main(int argc, char *argv[]) {
         running = false;
         return SDL_APP_SUCCESS;
       }
-    }
-    SDL_RenderClear(renderer);
-    
-    // player and movement stuff
-    float delta_time = SDL_GetTicks() / 1000.0f;
 
-    Player player;
-    player_init(&player);
-    player_update(&player, delta_time);
-    player_draw(&player, renderer);
-  
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderPresent(renderer);
+      const bool *keys = SDL_GetKeyboardState(NULL);
+
+      Uint32 now = SDL_GetTicks();
+      float delta_time = (now - last_time) / 1000.0f;
+      last_time = now;
+
+      if (delta_time > 0.05f) delta_time = 0.05f;
+      if (delta_time <= 0.0f) delta_time = 0.001f;
+
+      SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+      SDL_RenderClear(renderer);
+    
+      // movement stuff
+      player_update(&player, delta_time, keys);
+      player_draw(&player, renderer);
+      SDL_RenderPresent(renderer);
+    }
   }
 
   SDL_DestroyRenderer(renderer);
