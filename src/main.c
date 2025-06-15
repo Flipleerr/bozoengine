@@ -32,29 +32,30 @@ int main(int argc, char *argv[]) {
   SDL_Event event;
 
   while(running) {
+    Uint32 now = SDL_GetTicks();
+    float delta_time = (now - last_time) / 1000.0f;
+    last_time = now;
+
+    // clamp delta time to reasonable values
+    if (delta_time > 0.016f) delta_time = 0.016f;
+    if (delta_time <= 0.0f) delta_time = 0.001f;
+
     while(SDL_PollEvent(&event)) {
       if (event.type == SDL_EVENT_QUIT) {
         running = false;
         return SDL_APP_SUCCESS;
       }
-
-      const bool *keys = SDL_GetKeyboardState(NULL);
-
-      Uint32 now = SDL_GetTicks();
-      float delta_time = (now - last_time) / 1000.0f;
-      last_time = now;
-
-      if (delta_time > 0.05f) delta_time = 0.05f;
-      if (delta_time <= 0.0f) delta_time = 0.001f;
-
-      SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-      SDL_RenderClear(renderer);
-    
-      // movement stuff
-      player_update(&player, delta_time, keys);
-      player_draw(&player, renderer);
-      SDL_RenderPresent(renderer);
     }
+
+    const bool *keys = SDL_GetKeyboardState(NULL);
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderClear(renderer);
+    
+    // movement stuff
+    player_update(&player, delta_time, keys);
+    player_draw(&player, renderer);
+    SDL_RenderPresent(renderer);
   }
 
   SDL_DestroyRenderer(renderer);
