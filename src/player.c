@@ -12,18 +12,26 @@ void player_init(Player *p) {
 
 void player_update(Player *p, float delta_time, const bool *keys) {
   const float accel = 10.0f;
-  const float movement_speed = 100.0f;
+  const float movement_speed = 200.0f;
 
-  // movement_speed has to be multiplied by delta_time in order to avoid weird behavior such as not being able to removed right. 
+  // movement_speed has to be multiplied by delta_time in order to avoid weird behavior such as not being able to move right. 
   if (keys[SDL_SCANCODE_RIGHT]) {
-    p->vx = movement_speed * delta_time;
+    p->vx += accel;
+    if (p->vx > movement_speed) p->vx = movement_speed;
   } else if (keys[SDL_SCANCODE_LEFT]) {
-    p->vx = -movement_speed * delta_time;
+    p->vx -= accel;
+    if (p->vx < -movement_speed) p->vx = -movement_speed;
   } else {
-    p->vx = 0;
+    if (p->vx > 0) {
+      p->vx -= accel;
+    }
+    if (p->vx < 0) {
+      p->vx += accel;
+      if (p->vx > 0) p->vx = 0;
+    }
   }
 
-  p->x += p->vx;
+  p->x += p->vx * delta_time;
 }
 
 void player_draw(Player *p, SDL_Renderer *renderer) {
