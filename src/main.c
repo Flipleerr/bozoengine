@@ -56,6 +56,8 @@ int main(int argc, char *argv[]) {
     player_update(&player, delta_time, keys);
     player_draw(&player, renderer);
     SDL_RenderPresent(renderer);
+
+    SDL_Delay(16);
   }
 
   SDL_DestroyRenderer(renderer);
