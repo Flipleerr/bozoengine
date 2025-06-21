@@ -1,2 +1,3 @@
-# ignore build files. pretty much it
+# ignore build files and macOS stuff. pretty much it
 build
+.DS_Store
