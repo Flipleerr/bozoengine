@@ -34,11 +34,11 @@ void player_update(Player *p, float delta_time, const bool *keys, Level *level) 
     }
   }
 
+  player_collision_check(p, level);
+
   if (!p->on_ground) {
     p->vy += gravity;
   }
-
-  player_collision_check(p, level);
 
   p->x += p->vx * delta_time;
   p->y += p->vy * delta_time;
@@ -68,8 +68,8 @@ void player_collision_check(Player *p, Level *level) {
       p->vy = 0;
       p->y = tile_y * 32 - p->h;
       p->on_ground = 1;
-    } else {
-      p->on_ground = 0;
     }
+    
+    p->on_ground = 0;
   }
 }
