@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 
   Level level;
 
-  if (load_bozolevel("assets/levels/tgz.bzl", &level) != 0) {
+  if (load_bozolevel("assets/levels/tgz.bzlv", &level) != 0) {
     SDL_Log("failed to load level!");
     return SDL_APP_FAILURE;
   }
