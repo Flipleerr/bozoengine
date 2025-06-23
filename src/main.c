@@ -1,6 +1,8 @@
 #include <SDL3/SDL.h>
 #include <stdbool.h>
+
 #include "player.h"
+#include "levels.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -20,6 +22,14 @@ int main(int argc, char *argv[]) {
     SDL_Log("failed to create renderer: %s", SDL_GetError());
     return SDL_APP_FAILURE;
   }
+
+  Level level;
+
+  if (load_bozolevel("/Users/memoryleak/Coding Stuff/bozoengine/assets/levels/tgz.bzl", &level) != 0) {
+    SDL_Log("failed to load level!");
+    return SDL_APP_FAILURE;
+  }
+  SDL_Log("level data parse test: %d x %d", level.width, level.height);
 
   // player initalization
   Player player;
@@ -53,10 +63,12 @@ int main(int argc, char *argv[]) {
     SDL_RenderClear(renderer);
     
     // movement stuff
-    player_update(&player, delta_time, keys);
+    player_update(&player, delta_time, keys, &level);
     player_draw(&player, renderer);
+    render_level(renderer, &level);
     SDL_RenderPresent(renderer);
 
+    // note: please switch this out for proper vsync.
     SDL_Delay(16);
   }
 
