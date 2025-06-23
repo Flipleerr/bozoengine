@@ -5,3 +5,9 @@ add_executable(${PROJECT_NAME}
   )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)
+
+add_custom_command(TARGET bozoengine POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+          ${CMAKE_SOURCE_DIR}/assets
+          $<TARGET_FILE_DIR:bozoengine>/assets
+)
