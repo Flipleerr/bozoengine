@@ -22,6 +22,7 @@ int main(int argc, char *argv[]) {
     SDL_Log("failed to create renderer: %s", SDL_GetError());
     return SDL_APP_FAILURE;
   }
+  SDL_SetRenderVSync(renderer, true);
 
   Level level;
 
@@ -69,7 +70,7 @@ int main(int argc, char *argv[]) {
     SDL_RenderPresent(renderer);
 
     // note: please switch this out for proper vsync.
-    SDL_Delay(16);
+    // SDL_Delay(16);
   }
 
   SDL_DestroyRenderer(renderer);

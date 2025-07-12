@@ -13,7 +13,7 @@ void player_init(Player *p) {
 }
 
 void player_update(Player *p, float delta_time, const bool *keys, Level *level) {
-  const float accel = 20.0f;
+  const float accel = 4.0f;
   const float gravity = 10.0f;
   const float movement_speed = 200.0f;
 
