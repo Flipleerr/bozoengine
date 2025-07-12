@@ -13,7 +13,7 @@ void player_init(Player *p) {
 }
 
 void player_update(Player *p, float delta_time, const bool *keys, Level *level) {
-  const float accel = 50.0f;
+  const float accel = 20.0f;
   const float gravity = 10.0f;
   const float movement_speed = 200.0f;
 
@@ -34,7 +34,10 @@ void player_update(Player *p, float delta_time, const bool *keys, Level *level) 
     }
   }
 
-  player_collision_check(p, level);
+  if (keys[SDL_SCANCODE_Z] && p->on_ground) {
+    p->vy = -300.0f;
+    p->on_ground = 0;
+  }
 
   if (!p->on_ground) {
     p->vy += gravity;
@@ -42,6 +45,8 @@ void player_update(Player *p, float delta_time, const bool *keys, Level *level) 
 
   p->x += p->vx * delta_time;
   p->y += p->vy * delta_time;
+
+  player_collision_check(p, level);
 }
 
 void player_draw(Player *p, SDL_Renderer *renderer) {
@@ -58,18 +63,23 @@ void player_draw(Player *p, SDL_Renderer *renderer) {
 }
 
 void player_collision_check(Player *p, Level *level) {
-  int tile_x = (int)(p->x) / 32;
+  int left_tile_x = (int)(p->x) / 32;
+  int right_tile_x = (int)(p->x + p->w - 1) / 32;
   int tile_y = ((int)(p->y + p->h)) / 32;
 
-  int idx = tile_y * level->width + tile_x;
-  if (idx >= 0 && idx < level->width * level->height) {
-    int tile = level->tiles[idx];
-    if (is_solid_tile(tile)) {
+  p->on_ground = 0;
+
+  for (int tx = left_tile_x; tx <= right_tile_x; ++tx) {
+    int tile_left = get_tile(level, left_tile_x, tile_y);
+    int tile_right = get_tile(level, right_tile_x, tile_y);
+    
+    if (is_solid_tile(tile_left) || is_solid_tile(tile_right)) {
       p->vy = 0;
       p->y = tile_y * 32 - p->h;
       p->on_ground = 1;
+      break;
+    } else {
+      p->on_ground = 0;
     }
-    
-    p->on_ground = 0;
   }
 }

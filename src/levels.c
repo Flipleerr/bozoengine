@@ -71,6 +71,13 @@ int load_bozolevel(const char *path, Level *level) {
   return 0;
 }
 
+int get_tile(Level *level, int x, int y) {
+  if (x < 0 || x >= level->width || y < 0 || y >= level->height) {
+    return 0;
+  }
+  return level->tiles[y * level->width + x];
+}
+
 void render_level(SDL_Renderer *renderer, Level *level) {
   const int tile_size = 32;
 

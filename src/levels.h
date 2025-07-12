@@ -11,4 +11,5 @@ typedef struct {
 
 int is_solid_tile(int tile);
 int load_bozolevel(const char *path, Level *level);
+int get_tile(Level *level, int x, int y);
 void render_level(SDL_Renderer *renderer, Level *level);
